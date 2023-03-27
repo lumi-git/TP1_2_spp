@@ -7,15 +7,18 @@ public class SemaphoreJUnitTest {
   private Class mySemImpl;
 
   @Before
-  public void obtainSemaphoreImplementation() 
+  public void obtainSemaphoreImplementation()
     throws ClassNotFoundException {
-    mySemImpl = Class.forName(System.getProperty("SemaphoreImplClass"));
+    mySemImpl = SemaphoreImplClass.class;
   }
 
-  private SemaphoreInterface createSemaphore() 
+  private SemaphoreInterface createSemaphore()
     throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+
     return (SemaphoreInterface)mySemImpl.newInstance();
+
   }
+
 
   protected void upThenDown(SemaphoreInterface sem, int count) {
     for(int i = 1; i <= count; i++) {
@@ -30,6 +33,7 @@ public class SemaphoreJUnitTest {
   public void testUpThenDownShouldNotBlockSingleThread() throws Exception {
     SemaphoreInterface sem = createSemaphore();
     upThenDown(sem,10000);
+
   } // EndMethod testUpThenDownShouldNotBlockSingleThread
 
   @Test(timeout = 40000)
@@ -43,7 +47,7 @@ public class SemaphoreJUnitTest {
     }
     for(Thread t: allThreads)
       t.join();
-    
+
   } // EndMethod testUpThenDownShouldNotBlockMultipleThreads
 
   @Test
@@ -105,7 +109,7 @@ public class SemaphoreJUnitTest {
       t.join();
   } // EndMethod testThatUpUnblocksBlockedThreadsWithUpperThreads
 
-  
+
   @Test(timeout = 40000)
   public void testThatReleaseAllWorksWithNoThreadWaiting() throws Exception {
     SemaphoreInterface sem = createSemaphore();
@@ -128,7 +132,7 @@ public class SemaphoreJUnitTest {
         t.start();
         allThreads.add(t);
       } // EndFor i
-      
+
       // releasing blocked threads. We use a while loop as we don't
       // know how long the downing threads will take to initialise.
       int totalReleased = 0;
@@ -169,7 +173,7 @@ public class SemaphoreJUnitTest {
       totalReleased += sem.releaseAll();
       Thread.yield();
     } // EndWhile
-    
+
     // all threads on the semaphore should now be released
     assertEquals(0,sem.releaseAll());
 
