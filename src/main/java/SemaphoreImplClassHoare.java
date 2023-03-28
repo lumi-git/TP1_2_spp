@@ -6,6 +6,7 @@ public class SemaphoreImplClassHoare implements SemaphoreInterface {
 
     // Constructeur par défaut
     public SemaphoreImplClassHoare() {
+
     }
 
     // Méthode up() qui augmente le nombre de permis de 1 et notifie un thread en attente
