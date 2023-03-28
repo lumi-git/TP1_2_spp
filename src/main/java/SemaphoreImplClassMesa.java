@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class SemaphoreImplClass implements SemaphoreInterface {
+public class SemaphoreImplClassMesa implements SemaphoreInterface {
 
   // Nombre de permis disponibles dans le sémaphore
   private int permits;
@@ -8,7 +8,7 @@ public class SemaphoreImplClass implements SemaphoreInterface {
   private final LinkedList<Thread> waitingThreads;
 
   // Constructeur qui initialise le nombre de permis à 0 et crée une nouvelle LinkedList pour les threads en attente
-  public SemaphoreImplClass() {
+  public SemaphoreImplClassMesa() {
     permits = 0;
     waitingThreads = new LinkedList<>();
   }

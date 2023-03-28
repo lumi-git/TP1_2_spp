@@ -1,15 +1,19 @@
-import org.junit.*;
-import java.util.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Collection;
+import java.util.Vector;
+
 import static org.junit.Assert.*;
 
-public class SemaphoreJUnitTest {
+public class SemaphoreHoareJUnitTest {
 
   private Class mySemImpl;
 
   @Before
   public void obtainSemaphoreImplementation()
     throws ClassNotFoundException {
-    mySemImpl = SemaphoreImplClass.class;
+    mySemImpl = SemaphoreImplClassHoare.class;
   }
 
   private SemaphoreInterface createSemaphore()
@@ -41,7 +45,7 @@ public class SemaphoreJUnitTest {
     SemaphoreInterface sem        = createSemaphore();
     Collection<Thread> allThreads = new Vector<Thread>();
     for(int i = 1; i <= 40 ; i++) {
-      Thread t = new UpThenDownThread(sem,this);
+      Thread t = new UpThenDownThreadHoare(sem,this);
       t.start();
       allThreads.add(t);
     }
@@ -53,7 +57,7 @@ public class SemaphoreJUnitTest {
   @Test
   public void testThatDownDoesBlock() throws Exception {
     SemaphoreInterface sem = createSemaphore();
-    Thread t = new DowningThread(sem,this);
+    Thread t = new DowningThreadHoare(sem,this);
     t.start();
     Thread.sleep(1000); // 1s = very long in terms of CPU time
     assertTrue(t.isAlive());
@@ -74,7 +78,7 @@ public class SemaphoreJUnitTest {
     SemaphoreInterface sem = createSemaphore();
     Collection<Thread> allThreads = new Vector<Thread>();
     for(int i = 0; i < 10 ; i++) {
-      Thread t = new DowningThread(sem,this);
+      Thread t = new DowningThreadHoare(sem,this);
       t.start();
       allThreads.add(t);
     }
@@ -94,13 +98,13 @@ public class SemaphoreJUnitTest {
     SemaphoreInterface sem = createSemaphore();
     Collection<Thread> allThreads = new Vector<Thread>();
     for(int i = 0; i < 100 ; i++) {
-      Thread t = new DowningThread(sem,this);
+      Thread t = new DowningThreadHoare(sem,this);
       t.start();
       allThreads.add(t);
     }
     Thread.sleep(1000); // leaving some time for threads to start and block
     for(int i = 0; i < 100 ; i++) {
-      Thread t = new UppingThread(sem,this);
+      Thread t = new UppingThreadHoare(sem,this);
       t.start();
       allThreads.add(t);
     }
@@ -128,7 +132,7 @@ public class SemaphoreJUnitTest {
       // launching the downing threads
       Collection<Thread> allThreads = new Vector<Thread>();
       for(int i = 0; i < nbWaitingThread ; i++) {
-        Thread t = new DowningThread(sem,this);
+        Thread t = new DowningThreadHoare(sem,this);
         t.start();
         allThreads.add(t);
       } // EndFor i
@@ -156,13 +160,13 @@ public class SemaphoreJUnitTest {
     Collection<Thread> allThreads = new Vector<Thread>();
     // we first create a number of threads blocked on a down operation.
     for(int i = 0; i < 200 ; i++) {
-      Thread t = new DowningThread(sem,this);
+      Thread t = new DowningThreadHoare(sem,this);
       t.start();
       allThreads.add(t);
     } // EndFor i
     // we then create 40 threads doing up and down
     for(int i = 1; i <= 40 ; i++) {
-      Thread t = new UpThenDownThread(createSemaphore(),this);
+      Thread t = new UpThenDownThreadHoare(createSemaphore(),this);
       t.start();
       allThreads.add(t);
     }
@@ -183,21 +187,21 @@ public class SemaphoreJUnitTest {
 
   } // EndMethod testStressWorkloadWithAllConcurrent
 
-} // EndClass SemaphoreJUnitTest
+} // EndClass SemaphoreHoareJUnitTest
 
-class TestingThread extends Thread {
+class TestingThreadHoare extends Thread {
   protected SemaphoreInterface mySemaphore;
-  protected SemaphoreJUnitTest myTestCase;
+  protected SemaphoreHoareJUnitTest myTestCase;
 
-  public TestingThread(SemaphoreInterface aSemaphore, SemaphoreJUnitTest aTestCase) {
+  public TestingThreadHoare(SemaphoreInterface aSemaphore, SemaphoreHoareJUnitTest aTestCase) {
     mySemaphore = aSemaphore;
     myTestCase  = aTestCase;
   }
-} // EndClass TestingThread
+} // EndClass TestingThreadHoare
 
-class UpThenDownThread extends TestingThread {
+class UpThenDownThreadHoare extends TestingThreadHoare {
 
-  public UpThenDownThread(SemaphoreInterface aSemaphore, SemaphoreJUnitTest aTestCase) {
+  public UpThenDownThreadHoare(SemaphoreInterface aSemaphore, SemaphoreHoareJUnitTest aTestCase) {
     super(aSemaphore,aTestCase);
   }
 
@@ -207,9 +211,9 @@ class UpThenDownThread extends TestingThread {
 
 } // EndClass UpThenDownThread
 
-class DowningThread extends TestingThread {
+class DowningThreadHoare extends TestingThreadHoare {
 
-  public DowningThread(SemaphoreInterface aSemaphore, SemaphoreJUnitTest aTestCase) {
+  public DowningThreadHoare(SemaphoreInterface aSemaphore, SemaphoreHoareJUnitTest aTestCase) {
     super(aSemaphore,aTestCase);
   }
 
@@ -218,9 +222,9 @@ class DowningThread extends TestingThread {
   } // EndMethod run
 } // EndClass DowningThread
 
-class UppingThread extends TestingThread {
+class UppingThreadHoare extends TestingThreadHoare {
 
-  public UppingThread(SemaphoreInterface aSemaphore, SemaphoreJUnitTest aTestCase) {
+  public UppingThreadHoare(SemaphoreInterface aSemaphore, SemaphoreHoareJUnitTest aTestCase) {
     super(aSemaphore,aTestCase);
   }
 
