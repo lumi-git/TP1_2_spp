@@ -1,6 +1,9 @@
 import java.util.concurrent.Exchanger;
+import java.util.concurrent.locks.ReentrantLock;
 
 class Main {
+    static boolean AliceisOk = true;
+    static boolean BobisOk = true;
     static Exchanger<String> exchanger = new Exchanger<String>();
     static String Pong = "pong";
     static String Ping = "ping";
@@ -16,10 +19,13 @@ class Main {
 
                 print(iter, "Bob has : " + data);
                 print(iter, "Bob Going to sleep");
+                BobisOk = true;
                 try {
-
+                    //bob has to wait for alice to be ready
+                    while (! AliceisOk ){print(iter, "Bob Waiting for Alice");}
                     data = exchanger.exchange(data);
                     print(iter, "Bob Exchange completed");
+                    BobisOk = false;
 
                 } catch (InterruptedException ex) {
 
@@ -37,11 +43,13 @@ class Main {
 
                 print(iter, "Alice has : " + data);
                 print(iter, "Alice Going to sleep ");
+                AliceisOk = true;
                 try {
-
+                    //alice has to wait for bob to be ready
+                    while (! BobisOk ){}
                     data = exchanger.exchange(data);
                     print(iter, "Alice Exchange completed");
-
+                    AliceisOk = false;
 
                 } catch (InterruptedException ex) {
 
